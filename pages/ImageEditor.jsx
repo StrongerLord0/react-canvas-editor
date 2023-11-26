@@ -1,18 +1,41 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
+import { useFabricJSEditor, FabricJSCanvas } from 'fabricjs-react';
+import { fabric } from 'fabric';
 
-export default function ImageEditor({ onClose }) {
+
+export default function ImageEditor({ imagen }) {
+  
+  const { editor, onReady } = useFabricJSEditor();
+
+  useEffect(() => {
+    if (editor && editor.canvas) {
+      // Crear una imagen de fondo
+      fabric.Image.fromURL(
+        imagen,
+        (img) => {
+          img.scaleToWidth(editor?.canvas.width);
+          img.set({
+            originX: 'left',
+            originY: 'top',
+            evented: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            lockUniScaling: true,
+            zIndex: 1,
+          });
+          editor.canvas.setBackgroundImage(img, editor.canvas.renderAll.bind(editor.canvas));
+        },
+        { crossOrigin: 'anonymous' } // Añade esto si la imagen está en un dominio diferente
+      );
+    }
+  }, [editor]);
+
+
   return (
-    <div className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50`}>
-      <div className={`flex w-3/5 h-4/5 bg-purple-500 p-2 rounded-xl text-white text-center`}>
-        <div className={`w-1/6 h-full bg-red-500`}>
-            A
-        </div>
-        <div className={`w-5/6 h-full bg-blue-400`}>
-            <button onClick={() => onClose(false)} className={`mt-6 rounded-full bg-blue-300 w-6`}>
-                X
-            </button>
-        </div>
-      </div>
-    </div>
+    <FabricJSCanvas className={`flex bg-blue-300 w-full h-5/6`} onReady={onReady} />
   );
 }

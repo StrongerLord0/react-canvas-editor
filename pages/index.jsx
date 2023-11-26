@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import { useFabricJSEditor, FabricJSCanvas } from 'fabricjs-react';
 import { fabric } from 'fabric';
+import ImageEditor from './ImageEditor';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -81,36 +82,10 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    if (editor && editor.canvas) {
-      // Crear una imagen de fondo
-      fabric.Image.fromURL(
-        imagenes[currentImageIndex],
-        (img) => {
-          img.scaleToWidth(editor?.canvas.width);
-          img.set({
-            originX: 'left',
-            originY: 'top',
-            evented: false,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockUniScaling: true,
-            zIndex: 1,
-          });
-          editor.canvas.setBackgroundImage(img, editor.canvas.renderAll.bind(editor.canvas));
-        },
-        { crossOrigin: 'anonymous' } // Añade esto si la imagen está en un dominio diferente
-      );
-    }
-  }, [editor]);
-
   return (
     <div className={`fixed flex w-full h-full p-10 bg-black`}>
       <div className={`flex flex-col m-10 w-1/3 h-5/6 bg-gray-600 bg-cover bg-center`}>
-        <FabricJSCanvas className={`flex bg-blue-300 w-full h-5/6`} onReady={onReady} />
+        <ImageEditor imagen= {imagenes[index]}/>
         <div className={`flex w-full h-1/6`}>
           {/* Añade controles para cambiar entre imágenes */}
           <button className="text-white" onClick={handlePrevImage}>
